@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuickFix Joburg - Report Municipal Issues</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .fade-in { animation: fadeIn 0.3s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .page-section { display: none; }
+        .page-section.active { display: block; }
+        .glass-effect { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 glass-effect border-b border-gray-200 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center cursor-pointer" onclick="showPage('home')">
+                    <div class="bg-blue-600 text-white p-2 rounded-lg mr-2">
+                        <i data-lucide="building-2" class="w-6 h-6"></i>
+                    </div>
+                    <span class="font-bold text-xl text-gray-900">QuickFix<span class="text-blue-600">Joburg</span></span>
+                </div>
+                
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <button onclick="showPage('home')" class="nav-link text-gray-700 hover:text-blue-600 font-medium transition">Home</button>
+                    <button onclick="showPage('report')" class="nav-link text-gray-700 hover:text-blue-600 font-medium transition">Report Issue</button>
+                    <button onclick="showPage('track')" class="nav-link text-gray-700 hover:text-blue-600 font-medium transition">Track Complaint</button>
+                    <button onclick="showPage('dashboard')" class="nav-link text-gray-700 hover:text-blue-600 font-medium transition">Dashboard</button>
+                    <button onclick="showPage('faq')" class="nav-link text-gray-700 hover:text-blue-600 font-medium transition">FAQ</button>
+                    <button onclick="showPage('contact')" class="nav-link text-gray-700 hover:text-blue-600 font-medium transition">Contact</button>
+                    <button id="authBtn" onclick="openAuthModal()" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition font-medium">Login / Register</button>
+                    <button id="logoutBtn" onclick="logout()" class="hidden bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition font-medium">Logout</button>
+                </div>
+
+                <!-- Mobile menu button -->
+                <div class="md:hidden flex items-center">
+                    <button onclick="toggleMobileMenu()" class="text-gray-700 hover:text-blue-600">
+                        <i data-lucide="menu" class="w-6 h-6"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="hidden md:hidden bg-white border-t border-gray-200">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <button onclick="showPage('home'); toggleMobileMenu()" class="block w-full text-left px-3 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-md">Home</button>
+                <button onclick="showPage('report'); toggleMobileMenu()" class="block w-full text-left px-3 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-md">Report Issue</button>
+                <button onclick="showPage('track'); toggleMobileMenu()" class="block w-full text-left px-3 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-md">Track Complaint</button>
+                <button onclick="showPage('dashboard'); toggleMobileMenu()" class="block w-full text-left px-3 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-md">Dashboard</button>
+                <button onclick="showPage('faq'); toggleMobileMenu()" class="block w-full text-left px-3 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-md">FAQ</button>
+                <button onclick="showPage('contact'); toggleMobileMenu()" class="block w-full text-left px-3 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-md">Contact</button>
+                <button onclick="openAuthModal(); toggleMobileMenu()" class="block w-full text-left px-3 py-2 text-blue-600 font-medium hover:bg-blue-50 rounded-md">Login / Register</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="pt-16 min-h-screen">
+        
+        <!-- HOME PAGE -->
+        <section id="home" class="page-section active fade-in">
+            <!-- Hero -->
+            <div class="relative bg-gradient-to-br from-blue-600 to-blue-800 text-white overflow-hidden">
+                <div class="absolute inset-0 bg-black opacity-20"></div>
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 relative z-10">
+                    <div class="text-center max-w-3xl mx-auto">
+                      
+                      
+                      <h1 class="text-4xl md:text-6xl font-bold mb-6 leading-tight">Report City Problems Quickly and Easily</h1>
+                        <p class="text-xl md:text-2xl mb-8 text-blue-100">Help us make Johannesburg better by reporting municipal issues in your area. Fast, simple, and effective.</p>
+                        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                            <button onclick="showPage('report')" class="bg-white text-blue-600 px-8 py-4 rounded-lg font-bold text-lg hover:bg-gray-100 transition shadow-lg flex items-center justify-center gap-2">
+                                <i data-lucide="plus-circle" class="w-5 h-5"></i>
+                                Report an Issue
+                            </button>
+                            <button onclick="showPage('track')" class="bg-transparent border-2 border-white text-white px-8 py-4 rounded-lg font-bold text-lg hover:bg-white hover:text-blue-600 transition flex items-center justify-center gap-2">
+                                <i data-lucide="search" class="w-5 h-5"></i>
+                                Track My Complaint
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-gray-50 to-transparent"></div>
+            </div>
+
+            <!-- Categories -->
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+                <h2 class="text-3xl font-bold text-center mb-12 text-gray-900">What Can You Report?</h2>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                    <div onclick="selectCategory('Electricity')" class="bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition cursor-pointer border border-gray-100 group">
+                        <div class="bg-yellow-100 w-14 h-14 rounded-lg flex items-center justify-center mb-4 group-hover:bg-yellow-200 transition">
+                            <i data-lucide="zap" class="w-7 h-7 text-yellow-600"></i>
+                        </div>
+                        <h3 class="font-semibold text-lg text-gray-900">Electricity</h3>
+                        <p class="text-gray-600 text-sm mt-1">Outages, faults, metering</p>
+                    </div>
+                    <div onclick="selectCategory('Water')" class="bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition cursor-pointer border border-gray-100 group">
+                        <div class="bg-blue-100 w-14 h-14 rounded-lg flex items-center justify-center mb-4 group-hover:bg-blue-200 transition">
+                            <i data-lucide="droplets" class="w-7 h-7 text-blue-600"></i>
+                        </div>
+                        <h3 class="font-semibold text-lg text-gray-900">Water</h3>
+                        <p class="text-gray-600 text-sm mt-1">Leaks, supply issues</p>
+                    </div>
+                    <div onclick="selectCategory('Refuse')" class="bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition cursor-pointer border border-gray-100 group">
+                        <div class="bg-green-100 w-14 h-14 rounded-lg flex items-center justify-center mb-4 group-hover:bg-green-200 transition">
+                            <i data-lucide="trash-2" class="w-7 h-7 text-green-600"></i>
+                        </div>
+                        <h3 class="font-semibold text-lg text-gray-900">Refuse</h3>
+                        <p class="text-gray-600 text-sm mt-1">Collection, illegal dumping</p>
+                    </div>
+                    <div onclick="selectCategory('Sewerage')" class="bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition cursor-pointer border border-gray-100 group">
+                        <div class="bg-purple-100 w-14 h-14 rounded-lg flex items-center justify-center mb-4 group-hover:bg-purple-200 transition">
+                            <i data-lucide="waves" class="w-7 h-7 text-purple-600"></i>
+                        </div>
+                        <h3 class="font-semibold text-lg text-gray-900">Sewerage</h3>
+                        <p class="text-gray-600 text-sm mt-1">Blockages, overflows</p>
+                    </div>
+                    <div onclick="selectCategory('Billing')" class="bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition cursor-pointer border border-gray-100 group">
+                        <div class="bg-red-100 w-14 h-14 rounded-lg flex items-center justify-center mb-4 group-hover:bg-red-200 transition">
+                            <i data-lucide="file-text" class="w-7 h-7 text-red-600"></i>
+                        </div>
+                        <h3 class="font-semibold text-lg text-gray-900">Billing</h3>
+                        <p class="text-gray-600 text-sm mt-1">Account queries, errors</p>
+                    </div>
+                    <div onclick="selectCategory('Roads')" class="bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition cursor-pointer border border-gray-100 group">
+                        <div class="bg-gray-100 w-14 h-14 rounded-lg flex items-center justify-center mb-4 group-hover:bg-gray-200 transition">
+                            <i data-lucide="car" class="w-7 h-7 text-gray-600"></i>
+                        </div>
+                        <h3 class="font-semibold text-lg text-gray-900">Roads</h3>
+                        <p class="text-gray-600 text-sm mt-1">Potholes, road markings</p>
+                    </div>
+                    <div onclick="selectCategory('Streetlights')" class="bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition cursor-pointer border border-gray-100 group">
+                        <div class="bg-indigo-100 w-14 h-14 rounded-lg flex items-center justify-center mb-4 group-hover:bg-indigo-200 transition">
+                            <i data-lucide="lightbulb" class="w-7 h-7 text-indigo-600"></i>
+                        </div>
+                        <h3 class="font-semibold text-lg text-gray-900">Streetlights</h3>
+                        <p class="text-gray-600 text-sm mt-1">Faulty lights, outages</p>
+                    </div>
+                    <div onclick="selectCategory('Other')" class="bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition cursor-pointer border border-gray-100 group">
+                        <div class="bg-orange-100 w-14 h-14 rounded-lg flex items-center justify-center mb-4 group-hover:bg-orange-200 transition">
+                            <i data-lucide="more-horizontal" class="w-7 h-7 text-orange-600"></i>
+                        </div>
+                        <h3 class="font-semibold text-lg text-gray-900">Other</h3>
+                        <p class="text-gray-600 text-sm mt-1">General issues</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- How It Works -->
+            <div class="bg-white py-16 border-t border-gray-200">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <h2 class="text-3xl font-bold text-center mb-12 text-gray-900">How It Works</h2>
+                    <div class="grid md:grid-cols-4 gap-8">
+                        <div class="text-center">
+                            <div class="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <span class="text-2xl font-bold text-blue-600">1</span>
+                            </div>
+                            <h3 class="font-semibold text-lg mb-2">Report</h3>
+                            <p class="text-gray-600">Fill in the simple form with details about the issue</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <span class="text-2xl font-bold text-blue-600">2</span>
+                            </div>
+                            <h3 class="font-semibold text-lg mb-2">Receive</h3>
+                            <p class="text-gray-600">Get a unique reference number instantly</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <span class="text-2xl font-bold text-blue-600">3</span>
+                            </div>
+                            <h3 class="font-semibold text-lg mb-2">Track</h3>
+                            <p class="text-gray-600">Monitor progress in real-time on your dashboard</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <span class="text-2xl font-bold text-blue-600">4</span>
+                            </div>
+                            <h3 class="font-semibold text-lg mb-2">Resolved</h3>
+                            <p class="text-gray-600">Get notified when the issue is fixed</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats -->
+            <div class="bg-blue-600 text-white py-16">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="grid md:grid-cols-3 gap-8 text-center">
+                        <div>
+                            <div class="text-4xl font-bold mb-2">12,458</div>
+                            <div class="text-blue-200">Issues Reported</div>
+                        </div>
+                        <div>
+                            <div class="text-4xl font-bold mb-2">89%</div>
+                            <div class="text-blue-200">Resolution Rate</div>
+                        </div>
+                        <div>
+                            <div class="text-4xl font-bold mb-2">48hrs</div>
+                            <div class="text-blue-200">Average Response</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- REPORT ISSUE PAGE -->
+        <section id="report" class="page-section fade-in">
+            <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+                <div class="bg-white rounded-2xl shadow-lg p-8 border border-gray-100">
+                    <div class="text-center mb-8">
+                        <h2 class="text-3xl font-bold text-gray-900 mb-2">Report an Issue</h2>
+                        <p class="text-gray-600">Help us improve Johannesburg by reporting municipal problems in your area</p>
+                    </div>
+
+                    <form id="reportForm" onsubmit="submitReport(event)" class="space-y-6">
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Issue Category *</label>
+                                <select id="category" required class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition">
+                                    <option value="">Select category</option>
+                                    <option value="Electricity">Electricity</option>
+                                    <option value="Water">Water</option>
+                                    <option value="Refuse">Refuse Collection</option>
+                                    <option value="Sewerage">Sewerage</option>
+                                    <option value="Billing">Billing</option>
+                                    <option value="Roads">Roads & Potholes</option>
+                                    <option value="Streetlights">Streetlights</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Urgency Level *</label>
+                                <select id="urgency" required class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition">
+                                    <option value="Low">Low - Not urgent</option>
+                                    <option value="Medium" selected>Medium - Needs attention</option>
+                                    <option value="High">High - Urgent</option>
+                                    <option value="Critical">Critical - Emergency</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Issue Title *</label>
+                            <input type="text" id="title" required placeholder="Brief description of the problem" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Detailed Description *</label>
+                            <textarea id="description" required rows="4" placeholder="Provide as much detail as possible about the issue..." class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"></textarea>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Location/Address *</label>
+                            <div class="relative">
+                                <i data-lucide="map-pin" class="absolute left-3 top-3.5 w-5 h-5 text-gray-400"></i>
+                                <input type="text" id="location" required placeholder="Street address or landmark" class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Upload Photo (Optional)</label>
+                            <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-500 transition cursor-pointer" onclick="document.getElementById('photo').click()">
+                                <i data-lucide="camera" class="w-8 h-8 text-gray-400 mx-auto mb-2"></i>
+                                <p class="text-sm text-gray-600">Click to upload or drag and drop</p>
+                                <p class="text-xs text-gray-500 mt-1">PNG, JPG up to 5MB</p>
+                                <input type="file" id="photo" accept="image/*" class="hidden" onchange="handleFileSelect(this)">
+                                <p id="fileName" class="text-sm text-blue-600 mt-2 hidden"></p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-3">
+                            <input type="checkbox" id="terms" required class="mt-1 w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500">
+                            <label for="terms" class="text-sm text-gray-600">I confirm that the information provided is accurate and I have the authority to report this issue. I understand that false reports may result in penalties.</label>
+                        </div>
+
+                        <button type="submit" class="w-full bg-blue-600 text-white py-4 rounded-lg font-bold text-lg hover:bg-blue-700 transition shadow-lg flex items-center justify-center gap-2">
+                            <i data-lucide="send" class="w-5 h-5"></i>
+                            Submit Report
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- TRACK COMPLAINT PAGE -->
+        <section id="track" class="page-section fade-in">
+            <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+                <div class="bg-white rounded-2xl shadow-lg p-8 border border-gray-100 text-center">
+                    <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i data-lucide="search" class="w-10 h-10 text-blue-600"></i>
+                    </div>
+                    <h2 class="text-3xl font-bold text-gray-900 mb-4">Track Your Complaint</h2>
+                    <p class="text-gray-600 mb-8">Enter your reference number to check the status of your report</p>
+                    
+                    <form onsubmit="trackComplaint(event)" class="space-y-4">
+                        <div class="relative">
+                            <input type="text" id="trackRef" placeholder="e.g., QF-1234-5678" class="w-full px-6 py-4 text-lg rounded-lg border-2 border-gray-300 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none transition text-center uppercase tracking-wider" required>
+                        </div>
+                        <button type="submit" class="w-full bg-blue-600 text-white py-4 rounded-lg font-bold text-lg hover:bg-blue-700 transition shadow-lg">
+                            Track Status
+                        </button>
+                    </form>
+
+                    <div id="trackResult" class="mt-8 hidden text-left">
+                        <!-- Results will be displayed here -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- DASHBOARD PAGE -->
+        <section id="dashboard" class="page-section fade-in">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+                <div class="flex justify-between items-center mb-8">
+                    <div>
+                        <h2 class="text-3xl font-bold text-gray-900">My Dashboard</h2>
+                        <p class="text-gray-600 mt-1">View and manage your reported issues</p>
+                    </div>
+                    <button onclick="showPage('report')" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition font-medium flex items-center gap-2">
+                        <i data-lucide="plus" class="w-5 h-5"></i>
+                        New Report
+                    </button>
+                </div>
+
+                <div id="dashboardContent" class="space-y-4">
+                    <!-- Dashboard content will be loaded here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ PAGE -->
+        <section id="faq" class="page-section fade-in">
+            <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-4">Frequently Asked Questions</h2>
+                    <p class="text-gray-600">Find answers to common questions about QuickFix Joburg</p>
+                </div>
+
+                <div class="space-y-4">
+                    <div class="bg-white rounded-lg shadow-md border border-gray-100 overflow-hidden">
+                        <button onclick="toggleFaq(this)" class="w-full px-6 py-4 text-left flex justify-between items-center hover:bg-gray-50 transition">
+                            <span class="font-semibold text-gray-900">How long does it take to resolve an issue?</span>
+                            <i data-lucide="chevron-down" class="w-5 h-5 text-gray-500 transform transition-transform"></i>
+                        </button>
+                        <div class="hidden px-6 pb-4 text-gray-600 border-t border-gray-100 pt-4">
+                            Response times vary depending on the issue type and urgency. Critical issues (like electrical hazards) are typically addressed within 24 hours, while standard issues may take 3-5 business days. You can track progress in real-time using your reference number.
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-lg shadow-md border border-gray-100 overflow-hidden">
+                        <button onclick="toggleFaq(this)" class="w-full px-6 py-4 text-left flex justify-between items-center hover:bg-gray-50 transition">
+                            <span class="font-semibold text-gray-900">What should I include in my report?</span>
+                            <i data-lucide="chevron-down" class="w-5 h-5 text-gray-500 transform transition-transform"></i>
+                        </button>
+                        <div class="hidden px-6 pb-4 text-gray-600 border-t border-gray-100 pt-4">
+                            Please include: 1) Clear description of the problem, 2) Exact location or address, 3) Photos if possible, 4) How long the issue has been present, 5) Any safety concerns. The more details you provide, the faster we can resolve the issue.
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-lg shadow-md border border-gray-100 overflow-hidden">
+                        <button onclick="toggleFaq(this)" class="w-full px-6 py-4 text-left flex justify-between items-center hover:bg-gray-50 transition">
+                            <span class="font-semibold text-gray-900">Is there a cost to use this service?</span>
+                            <i data-lucide="chevron-down" class="w-5 h-5 text-gray-500 transform transition-transform"></i>
+                        </button>
+                        <div class="hidden px-6 pb-4 text-gray-600 border-t border-gray-100 pt-4">
+                            No, QuickFix Joburg is a free service provided by the City of Johannesburg for all residents. Standard municipal rates and charges may apply for certain repairs on private property.
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-lg shadow-md border border-gray-100 overflow-hidden">
+                        <button onclick="toggleFaq(this)" class="w-full px-6 py-4 text-left flex justify-between items-center hover:bg-gray-50 transition">
+                            <span class="font-semibold text-gray-900">What if my issue is not listed in the categories?</span>
+                            <i data-lucide="chevron-down" class="w-5 h-5 text-gray-500 transform transition-transform"></i>
+                        </button>
+                        <div class="hidden px-6 pb-4 text-gray-600 border-t border-gray-100 pt-4">
+                            Select "Other" as the category and provide detailed information in the description. Our team will categorize it appropriately and ensure it reaches the right department.
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-lg shadow-md border border-gray-100 overflow-hidden">
+                        <button onclick="toggleFaq(this)" class="w-full px-6 py-4 text-left flex justify-between items-center hover:bg-gray-50 transition">
+                            <span class="font-semibold text-gray-900">How do I update my report?</span>
+                            <i data-lucide="chevron-down" class="w-5 h-5 text-gray-500 transform transition-transform"></i>
+                        </button>
+                        <div class="hidden px-6 pb-4 text-gray-600 border-t border-gray-100 pt-4">
+                            Log into your dashboard and select the report you wish to update. You can add comments or additional photos to existing reports. For urgent updates, please contact our call center.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CONTACT PAGE -->
+        <section id="contact" class="page-section fade-in">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+                <div class="grid md:grid-cols-2 gap-12">
+                    <div>
+                        <h2 class="text-3xl font-bold text-gray-900 mb-4">Contact Us</h2>
+                        <p class="text-gray-600 mb-8">Need help? Our support team is available to assist you with any questions or concerns.</p>
+                        
+                        <div class="space-y-6">
+                            <div class="flex items-start gap-4">
+                                <div class="bg-blue-100 p-3 rounded-lg">
+                                    <i data-lucide="phone" class="w-6 h-6 text-blue-600"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-semibold text-gray-900">Phone</h3>
+                                    <p class="text-gray-600">0860 562 874 (Joburg Connect)</p>
+                                    <p class="text-sm text-gray-500">Mon-Fri: 8am - 5pm</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start gap-4">
+                                <div class="bg-blue-100 p-3 rounded-lg">
+                                    <i data-lucide="mail" class="w-6 h-6 text-blue-600"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-semibold text-gray-900">Email</h3>
+                                    <p class="text-gray-600">support@quickfixjoburg.gov.za</p>
+                                    <p class="text-sm text-gray-500">We respond within 24 hours</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start gap-4">
+                                <div class="bg-blue-100 p-3 rounded-lg">
+                                    <i data-lucide="map-pin" class="w-6 h-6 text-blue-600"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-semibold text-gray-900">Visit Us</h3>
+                                    <p class="text-gray-600">158 Civic Boulevard<br>Metropolitan Centre, Braamfontein<br>Johannesburg, 2001</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-2xl shadow-lg p-8 border border-gray-100">
+                        <form onsubmit="submitContact(event)" class="space-y-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Name</label>
+                                <input type="text" required class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                                <input type="email" required class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Subject</label>
+                                <select class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition">
+                                    <option>General Inquiry</option>
+                                    <option>Technical Support</option>
+                                    <option>Feedback</option>
+                                    <option>Complaint</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Message</label>
+                                <textarea rows="4" required class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"></textarea>
+                            </div>
+                            <button type="submit" class="w-full bg-blue-600 text-white py-3 rounded-lg font-bold hover:bg-blue-700 transition shadow-lg">
+                                Send Message
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CONFIRMATION MODAL -->
+        <div id="confirmationModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
+            <div class="bg-white rounded-2xl max-w-md w-full p-8 text-center transform transition-all scale-100">
+                <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <i data-lucide="check-circle" class="w-10 h-10 text-green-600"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-gray-900 mb-2">Report Submitted!</h3>
+                <p class="text-gray-600 mb-6">Your issue has been logged successfully. Please save your reference number:</p>
+                <div class="bg-gray-100 rounded-lg p-4 mb-6">
+                    <div class="text-3xl font-mono font-bold text-blue-600 tracking-wider" id="refNumber">QF-XXXX-XXXX</div>
+                </div>
+                <p class="text-sm text-gray-500 mb-6">You will receive SMS and email updates regarding this report.</p>
+                <div class="flex gap-3">
+                    <button onclick="closeConfirmation(); showPage('dashboard')" class="flex-1 bg-blue-600 text-white py-3 rounded-lg font-bold hover:bg-blue-700 transition">
+                        View Dashboard
+                    </button>
+                    <button onclick="closeConfirmation(); showPage('home')" class="flex-1 bg-gray-200 text-gray-800 py-3 rounded-lg font-bold hover:bg-gray-300 transition">
+                        Home
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- AUTH MODAL -->
+        <div id="authModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
+            <div class="bg-white rounded-2xl max-w-md w-full p-8 relative">
+                <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+                
+                <div class="text-center mb-8">
+                    <h3 class="text-2xl font-bold text-gray-900" id="authTitle">Welcome Back</h3>
+                    <p class="text-gray-600 mt-2" id="authSubtitle">Sign in to manage your reports</p>
+                </div>
+
+                <form id="authForm" onsubmit="handleAuth(event)" class="space-y-4">
+                    <div id="nameField" class="hidden">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                        <input type="text" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+                        <input type="email" id="authEmail" required class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                        <input type="password" id="authPassword" required class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition">
+                    </div>
+                    <button type="submit" class="w-full bg-blue-600 text-white py-3 rounded-lg font-bold hover:bg-blue-700 transition shadow-lg">
+                        <span id="authButtonText">Sign In</span>
+                    </button>
+                </form>
+
+                <div class="mt-6 text-center">
+                    <p class="text-gray-600">
+                        <span id="authSwitchText">Don't have an account?</span>
+                        <button onclick="toggleAuthMode()" class="text-blue-600 font-semibold hover:underline ml-1" id="authSwitchBtn">Register</button>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <div class="flex items-center mb-4">
+                        <div class="bg-blue-600 text-white p-2 rounded-lg mr-2">
+                            <i data-lucide="building-2" class="w-5 h-5"></i>
+                        </div>
+                        <span class="font-bold text-xl">QuickFix<span class="text-blue-400">Joburg</span></span>
+                    </div>
+                    <p class="text-gray-400 text-sm">Making Johannesburg better, one report at a time. A citizen-centric municipal service platform.</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">Quick Links</h4>
+                    <ul class="space-y-2 text-gray-400 text-sm">
+                        <li><button onclick="showPage('report')" class="hover:text-white transition">Report Issue</button></li>
+                        <li><button onclick="showPage('track')" class="hover:text-white transition">Track Complaint</button></li>
+                        <li><button onclick="showPage('dashboard')" class="hover:text-white transition">Dashboard</button></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">Support</h4>
+                    <ul class="space-y-2 text-gray-400 text-sm">
+                        <li><button onclick="showPage('faq')" class="hover:text-white transition">FAQ</button></li>
+                        <li><button onclick="showPage('contact')" class="hover:text-white transition">Contact Us</button></li>
+                        <li><a href="#" class="hover:text-white transition">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">Connect</h4>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition"><i data-lucide="facebook" class="w-5 h-5"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition"><i data-lucide="twitter" class="w-5 h-5"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition"><i data-lucide="instagram" class="w-5 h-5"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 pt-8 text-center text-gray-400 text-sm">
+                <p>&copy; 2024 City of Johannesburg. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // State Management
+        let currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
+        let complaints = JSON.parse(localStorage.getItem('complaints')) || [];
+        let isLoginMode = true;
+
+        // Check auth status on load
+        updateAuthUI();
+
+        // Navigation
+        function showPage(pageName) {
+            // Hide all sections
+            document.querySelectorAll('.page-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Show selected section
+            document.getElementById(pageName).classList.add('active');
+            
+            // Update active nav state
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('text-blue-600');
+            });
+            
+            // Scroll to top
+            window.scrollTo(0, 0);
+
+            // Load dashboard if needed
+            if (pageName === 'dashboard') {
+                loadDashboard();
+            }
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('hidden');
+        }
+
+        // Category Selection
+        function selectCategory(category) {
+            showPage('report');
+            document.getElementById('category').value = category;
+        }
+
+        // File Upload Handler
+        function handleFileSelect(input) {
+            if (input.files && input.files[0]) {
+                document.getElementById('fileName').textContent = input.files[0].name;
+                document.getElementById('fileName').classList.remove('hidden');
+            }
+        }
+
+        // Generate Reference Number
+        function generateRefNumber() {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let ref = 'QF-';
+            for (let i = 0; i < 4; i++) ref += chars.charAt(Math.floor(Math.random() * chars.length));
+            ref += '-';
+            for (let i = 0; i < 4; i++) ref += chars.charAt(Math.floor(Math.random() * chars.length));
+            return ref;
+        }
+
+        // Submit Report
+        function submitReport(e) {
+            e.preventDefault();
+            
+            const complaint = {
+                id: generateRefNumber(),
+                category: document.getElementById('category').value,
+                urgency: document.getElementById('urgency').value,
+                title: document.getElementById('title').value,
+                description: document.getElementById('description').value,
+                location: document.getElementById('location').value,
+                status: 'Submitted',
+                date: new Date().toISOString(),
+                user: currentUser ? currentUser.email : 'guest',
+                updates: [{
+                    date: new Date().toISOString(),
+                    status: 'Submitted',
+                    message: 'Your complaint has been received and is being reviewed.'
+                }]
+            };
+
+            complaints.push(complaint);
+            localStorage.setItem('complaints', JSON.stringify(complaints));
+
+            // Show confirmation
+            document.getElementById('refNumber').textContent = complaint.id;
+            document.getElementById('confirmationModal').classList.remove('hidden');
+            
+            // Reset form
+            document.getElementById('reportForm').reset();
+            document.getElementById('fileName').classList.add('hidden');
+        }
+
+        function closeConfirmation() {
+            document.getElementById('confirmationModal').classList.add('hidden');
+        }
+
+        // Track Complaint
+        function trackComplaint(e) {
+            e.preventDefault();
+            const ref = document.getElementById('trackRef').value.toUpperCase();
+            const complaint = complaints.find(c => c.id === ref);
+            const resultDiv = document.getElementById('trackResult');
+            
+            if (complaint) {
+                const statusColors = {
+                    'Submitted': 'bg-yellow-100 text-yellow-800',
+                    'In Progress': 'bg-blue-100 text-blue-800',
+                    'Resolved': 'bg-green-100 text-green-800',
+                    'Closed': 'bg-gray-100 text-gray-800'
+                };
+
+                resultDiv.innerHTML = `
+                    <div class="bg-gray-50 rounded-lg p-6 border border-gray-200">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h3 class="font-bold text-lg text-gray-900">${complaint.title}</h3>
+                                <p class="text-sm text-gray-500">Ref: ${complaint.id}</p>
+                            </div>
+                            <span class="px-3 py-1 rounded-full text-sm font-semibold ${statusColors[complaint.status] || 'bg-gray-100'}">
+                                ${complaint.status}
+                            </span>
+                        </div>
+                        
+                        <div class="space-y-4">
+                            <div class="flex items-center gap-2 text-sm text-gray-600">
+                                <i data-lucide="map-pin" class="w-4 h-4"></i>
+                                ${complaint.location}
+                            </div>
+                            <div class="flex items-center gap-2 text-sm text-gray-600">
+                                <i data-lucide="calendar" class="w-4 h-4"></i>
+                                Reported on ${new Date(complaint.date).toLocaleDateString()}
+                            </div>
+                            
+                            <div class="border-t border-gray-200 pt-4 mt-4">
+                                <h4 class="font-semibold mb-3">Progress Updates</h4>
+                                <div class="space-y-3">
+                                    ${complaint.updates.map(update => `
+                                        <div class="flex gap-3">
+                                            <div class="w-2 h-2 bg-blue-600 rounded-full mt-2"></div>
+                                            <div>
+                                                <p class="text-sm font-medium text-gray-900">${update.status}</p>
+                                                <p class="text-sm text-gray-600">${update.message}</p>
+                                                <p class="text-xs text-gray-400 mt-1">${new Date(update.date).toLocaleString()}</p>
+                                            </div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                resultDiv.classList.remove('hidden');
+                lucide.createIcons();
+            } else {
+                resultDiv.innerHTML = `
+                    <div class="bg-red-50 border border-red-200 rounded-lg p-4 text-center">
+                        <i data-lucide="alert-circle" class="w-8 h-8 text-red-500 mx-auto mb-2"></i>
+                        <p class="text-red-800 font-medium">No complaint found with reference number: ${ref}</p>
+                        <p class="text-red-600 text-sm mt-1">Please check the number and try again.</p>
+                    </div>
+                `;
+                resultDiv.classList.remove('hidden');
+                lucide.createIcons();
+            }
+        }
+
+        // Dashboard
+        function loadDashboard() {
+            const container = document.getElementById('dashboardContent');
+            const userComplaints = currentUser 
+                ? complaints.filter(c => c.user === currentUser.email)
+                : complaints.filter(c => c.user === 'guest');
+
+            if (userComplaints.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-12 bg-white rounded-lg shadow-sm border border-gray-200">
+                        <i data-lucide="clipboard-list" class="w-16 h-16 text-gray-300 mx-auto mb-4"></i>
+                        <h3 class="text-lg font-medium text-gray-900 mb-2">No complaints yet</h3>
+                        <p class="text-gray-600 mb-4">You haven't submitted any issues yet.</p>
+                        <button onclick="showPage('report')" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition">Report an Issue</button>
+                    </div>
+                `;
+            } else {
+                container.innerHTML = userComplaints.map(complaint => {
+                    const statusColors = {
+                        'Submitted': 'bg-yellow-100 text-yellow-800 border-yellow-200',
+                        'In Progress': 'bg-blue-100 text-blue-800 border-blue-200',
+                        'Resolved': 'bg-green-100 text-green-800 border-green-200',
+                        'Closed': 'bg-gray-100 text-gray-800 border-gray-200'
+                    };
+                    
+                    const categoryIcons = {
+                        'Electricity': 'zap',
+                        'Water': 'droplets',
+                        'Refuse': 'trash-2',
+                        'Sewerage': 'waves',
+                        'Billing': 'file-text',
+                        'Roads': 'car',
+                        'Streetlights': 'lightbulb',
+                        'Other': 'more-horizontal'
+                    };
+
+                    return `
+                        <div class="bg-white rounded-lg shadow-md border border-gray-200 p-6 hover:shadow-lg transition">
+                            <div class="flex justify-between items-start">
+                                <div class="flex gap-4">
+                                    <div class="bg-gray-100 p-3 rounded-lg">
+                                        <i data-lucide="${categoryIcons[complaint.category] || 'alert-circle'}" class="w-6 h-6 text-gray-600"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-bold text-lg text-gray-900">${complaint.title}</h3>
+                                        <p class="text-sm text-gray-500">${complaint.id} • ${complaint.category}</p>
+                                        <p class="text-sm text-gray-600 mt-1">${complaint.location}</p>
+                                    </div>
+                                </div>
+                                <span class="px-3 py-1 rounded-full text-sm font-semibold border ${statusColors[complaint.status]}">
+                                    ${complaint.status}
+                                </span>
+                            </div>
+                            <div class="mt-4 pt-4 border-t border-gray-100 flex justify-between items-center">
+                                <span class="text-sm text-gray-500">Reported ${new Date(complaint.date).toLocaleDateString()}</span>
+                                <button onclick="viewComplaintDetails('${complaint.id}')" class="text-blue-600 hover:text-blue-800 text-sm font-medium">View Details →</button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+            lucide.createIcons();
+        }
+
+        function viewComplaintDetails(id) {
+            document.getElementById('trackRef').value = id;
+            showPage('track');
+            trackComplaint({ preventDefault: () => {} });
+        }
+
+        // FAQ Toggle
+        function toggleFaq(button) {
+            const content = button.nextElementSibling;
+            const icon = button.querySelector('i');
+            
+            if (content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+                icon.style.transform = 'rotate(180deg)';
+            } else {
+                content.classList.add('hidden');
+                icon.style.transform = 'rotate(0deg)';
+            }
+        }
+
+        // Contact Form
+        function submitContact(e) {
+            e.preventDefault();
+            alert('Thank you for your message. We will get back to you within 24 hours.');
+            e.target.reset();
+        }
+
+        // Auth Functions
+        function openAuthModal() {
+            document.getElementById('authModal').classList.remove('hidden');
+        }
+
+        function closeAuthModal() {
+            document.getElementById('authModal').classList.add('hidden');
+        }
+
+        function toggleAuthMode() {
+            isLoginMode = !isLoginMode;
+            document.getElementById('authTitle').textContent = isLoginMode ? 'Welcome Back' : 'Create Account';
+            document.getElementById('authSubtitle').textContent = isLoginMode ? 'Sign in to manage your reports' : 'Register to track your issues';
+            document.getElementById('authButtonText').textContent = isLoginMode ? 'Sign In' : 'Register';
+            document.getElementById('authSwitchText').textContent = isLoginMode ? "Don't have an account?" : "Already have an account?";
+            document.getElementById('authSwitchBtn').textContent = isLoginMode ? 'Register' : 'Sign In';
+            document.getElementById('nameField').classList.toggle('hidden', isLoginMode);
+        }
+
+        function handleAuth(e) {
+            e.preventDefault();
+            const email = document.getElementById('authEmail').value;
+            
+            if (isLoginMode) {
+                // Simulate login
+                currentUser = { email: email, name: email.split('@')[0] };
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                alert('Welcome back, ' + currentUser.name + '!');
+            } else {
+                // Simulate register
+                currentUser = { email: email, name: e.target.querySelector('input[type="text"]').value || email.split('@')[0] };
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                alert('Account created successfully!');
+            }
+            
+            updateAuthUI();
+            closeAuthModal();
+        }
+
+        function logout() {
+            currentUser = null;
+            localStorage.removeItem('currentUser');
+            updateAuthUI();
+            showPage('home');
+        }
+
+        function updateAuthUI() {
+            const authBtn = document.getElementById('authBtn');
+            const logoutBtn = document.getElementById('logoutBtn');
+            
+            if (currentUser) {
+                authBtn.classList.add('hidden');
+                logoutBtn.classList.remove('hidden');
+                logoutBtn.textContent = 'Logout (' + currentUser.name + ')';
+            } else {
+                authBtn.classList.remove('hidden');
+                logoutBtn.classList.add('hidden');
+            }
+        }
+
+        // Close modals on outside click
+        window.onclick = function(event) {
+            const modal = document.getElementById('authModal');
+            const confModal = document.getElementById('confirmationModal');
+            if (event.target === modal) closeAuthModal();
+            if (event.target === confModal) closeConfirmation();
+        }
+    </script>
+</body>
+</html>
